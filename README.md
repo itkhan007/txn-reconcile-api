@@ -72,8 +72,8 @@ Below each step includes sample code snippets.
 > .pre-commit-config.yaml 
 repos:
      rev: v1.73.0
-> https://github.com/itkhan007/txn-reconcile-api/tree/main/.github/workflows
-    hooks:
+     https://github.com/itkhan007/txn-reconcile-api/tree/main/.github/workflows
+     hooks:
       - id: terraform_fmt
       - id: terraform_validate
       - id: tflint
