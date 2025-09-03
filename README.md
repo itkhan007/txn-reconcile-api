@@ -6,7 +6,9 @@ Assumptions:
 	Environments: dev, stage, prod (separate terraform workspaces or separate accounts).
 	Service stateful needs: metadata stored in Dynamo DB (default) or RDS if transactions    require SQL.
 
-![image](https://github.com/username/repo/assets/12345678/abcdef12-3456-7890-abcd-ef1234567890)
+<p align="center">
+  <img src="images/architect_image.png" alt="architect_image" width="500">
+</p>
 
  
 
