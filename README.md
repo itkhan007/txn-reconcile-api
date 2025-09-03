@@ -1,4 +1,5 @@
 **ARCHITECTURE: txn-reconcile-api**
+
 **Purpose**
 Replace legacy monolithic portion with a microservice (txn-reconcile-api) run in ECS Fargate, internet-facing HTTPS endpoint, PCI Level-1 controls applied.
 Assumptions:	
