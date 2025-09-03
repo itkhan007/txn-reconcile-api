@@ -23,6 +23,7 @@ Assumptions:
 > Monitoring: CloudWatch metrics/alarms, SNS for alerts.
 
 **Top-level approach **
+
 Multi-environment Terraform (dev/stg/prod) using a module-based layout and remote state in an S3 bucket with Dynamo DB locking.
 1.	Run the txn-reconcile-api as ECS Fargate service behind an Internet-facing Application Load Balancer (HTTPS) with ACM certificate (DNS validation).
 2.	Strong security baseline for PCI:
