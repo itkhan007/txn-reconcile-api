@@ -60,6 +60,7 @@ __________________________________
 ________________________________________
 
 **Step-by-step implementation plan**
+
 Below each step includes sample code snippets.
 1) Git repo + pre-commit
 > Initialize git repo.
