@@ -69,13 +69,12 @@ Below each step includes sample code snippets.
 > yamllint
 > .pre-commit-config.yaml 
 repos:
-  - repo: https://github.com/txnreconcileinfra/pre-commit-terraform
-    rev: v1.73.0
+     rev: v1.73.0
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
       - id: tflint
-  - repo: https://github.com/aquasecurity/tfsec
+
     rev: v1.30.0
     hooks:
       - id: tfsec
