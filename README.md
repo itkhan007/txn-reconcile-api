@@ -81,10 +81,7 @@ repos:
       - id: terraform_validate
       - id: tflint
 
-    rev: v1.30.0
-    hooks:
-      - id: tfsec
-Install: pip install pre-commit && pre-commit install
+    
 
 2) Terraform backend (remote state) and providers
 > Create a centralized S3 bucket for Terraform state (encrypted with KMS) and a DynamoDB table for locks.
