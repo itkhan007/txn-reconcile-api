@@ -52,34 +52,9 @@ Minimal things
 > Centralized logs + export to immutable S3 bucket with versioning and lifecycle.
 > IaC and container scanning in CI (tfsec, trivy).
 
-Repo layout 
-txn-reconcile-infra/
-├── README.md
-├── modules/
-│   ├── vpc/
-│   ├── ecs-fargate/        # cluster, task definition, service
-│   ├── alb/
-│   ├── iam/
-│   ├── ecr/
-│   ├── kms/
-│   ├── logging/
-│   └── config/
-├── envs/
-│   ├── dev/
-│   │   ├── main.tf
-│   │   ├── terraform.tfvars
-│   ├── stg/
-│   └── prod/
-├── ci/                     # pipeline snippets, hooks
-├── scripts/
-│   ├── audit_inventory.py
-│   └── tag_untagged.py
-├── .github/workflows/
-│   ├── ci-build.yml
-│   └── tf-deploy.yml
-├── .pre-commit-config.yaml
-├── ARCHITECTURE.md
-└── AI_USAGE.md
+<p align="center">
+  <img src="images/repo.png" alt="repo" width="500">
+</p>
 ________________________________________
 
 Step-by-step implementation plan
