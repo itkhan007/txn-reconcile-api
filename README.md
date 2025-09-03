@@ -1,4 +1,4 @@
-ARCHITECTURE: txn-reconcile-api
+**ARCHITECTURE: txn-reconcile-api**
 Purpose
 Replace legacy monolithic portion with a microservice (txn-reconcile-api) run in ECS Fargate, internet-facing HTTPS endpoint, PCI Level-1 controls applied.
 Assumptions:	
@@ -12,7 +12,7 @@ Assumptions:
 
  
 
-High-level components
+**High-level components**
 > Network: VPC (3 AZs), public subnets (ALB), private subnets (Fargate), NAT gateway(s), VPC Flow Logs.
 > Compute: ECS Fargate service (task definitions), auto-scaling.
 > Ingress: Internet ALB (HTTPS), ACM certificate, WAF.
@@ -21,7 +21,7 @@ High-level components
 > CI/CD: GitHub Actions (build, scan, push, terraform plan/apply).
 > Monitoring: CloudWatch metrics/alarms, SNS for alerts.
 
-Top-level approach 
+**Top-level approach **
 Multi-environment Terraform (dev/stg/prod) using a module-based layout and remote state in an S3 bucket with Dynamo DB locking.
 1.	Run the txn-reconcile-api as ECS Fargate service behind an Internet-facing Application Load Balancer (HTTPS) with ACM certificate (DNS validation).
 2.	Strong security baseline for PCI:
@@ -36,14 +36,14 @@ Multi-environment Terraform (dev/stg/prod) using a module-based layout and remot
 3.	CI/CD (GitHub Actions): build → scan → push to ECR → update infra (terraform plan in PR; apply to dev automatically, manual approvals for prod/stg).
 
 
-Risks / next steps 
+**Risks / next steps** 
 > Incomplete asset inventory — some resources may be untagged; central tagging enforcement needed.
 > Vulnerability scanning gaps — must ensure runtime scanning, regular container rebuilds, and dependency checks.
 >	DR limits — no cross-region active-active implementation by default.
 > Third-party dependencies — any external endpoints used by tasks must meet security reviews.
 
 __________________________________
-Minimal things 
+**Minimal things **
 > Enable Cloud Trail multi-region
 > KMS  for all at-rest encryption (including S3 server side, RDS, EBS, Dynamo DB table encryption if applicable).
 > Secrets Manager
@@ -57,7 +57,7 @@ Minimal things
 </p>
 ________________________________________
 
-Step-by-step implementation plan
+**Step-by-step implementation plan**
 Below each step includes sample code snippets.
 1) Git repo + pre-commit
 > Initialize git repo.
