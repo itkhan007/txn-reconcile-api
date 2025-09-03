@@ -1,5 +1,5 @@
 **ARCHITECTURE: txn-reconcile-api**
-Purpose
+**Purpose**
 Replace legacy monolithic portion with a microservice (txn-reconcile-api) run in ECS Fargate, internet-facing HTTPS endpoint, PCI Level-1 controls applied.
 Assumptions:	
 > AWS account is accessible and Route53 hosted zone exists for domain.
@@ -43,7 +43,7 @@ Multi-environment Terraform (dev/stg/prod) using a module-based layout and remot
 > Third-party dependencies — any external endpoints used by tasks must meet security reviews.
 
 __________________________________
-**Minimal things **
+******Minimal things **********
 > Enable Cloud Trail multi-region
 > KMS  for all at-rest encryption (including S3 server side, RDS, EBS, Dynamo DB table encryption if applicable).
 > Secrets Manager
