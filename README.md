@@ -31,7 +31,7 @@ The goal of this project was to move from a legacy monolith application to a sec
 > 
 > Monitoring: CloudWatch metrics/alarms, SNS for alerts.
 
-**Top-level approach **
+**Top-level approach**
 
 Multi-environment Terraform (dev/stg/prod) using a module-based layout and remote state in an S3 bucket with Dynamo DB locking.
 1.	Run the txn-reconcile-api as ECS Fargate service behind an Internet-facing Application Load Balancer (HTTPS) with ACM certificate (DNS validation).
@@ -65,7 +65,8 @@ Multi-environment Terraform (dev/stg/prod) using a module-based layout and remot
 > Third-party dependencies — any external endpoints used by tasks must meet security reviews.
 
 __________________________________
-******Minimal things **********
+**Minimal things**
+
 > Enable Cloud Trail multi-region
 > 
 > KMS  for all at-rest encryption (including S3 server side, RDS, EBS, Dynamo DB table encryption if applicable).
