@@ -22,7 +22,7 @@ Assumptions:
 > 
 > Storage: Dynamo DB (or RDS), S3 (logs and artifacts).
 > 
-> Security: KMS CMK, Secrets Manager, IAM least privilege, Cloud Trail, Guard Duty, AWS config.
+> Security: KMS Keys, Secrets Manager, IAM least privilege, Cloud Trail, Guard Duty, AWS config.
 > 
 > CI/CD: GitHub Actions (build, scan, push, terraform plan/apply).
 > 
@@ -32,13 +32,21 @@ Assumptions:
 
 Multi-environment Terraform (dev/stg/prod) using a module-based layout and remote state in an S3 bucket with Dynamo DB locking.
 1.	Run the txn-reconcile-api as ECS Fargate service behind an Internet-facing Application Load Balancer (HTTPS) with ACM certificate (DNS validation).
+   
 2.	Strong security baseline for PCI:
+   
 > VPC segmentation (private subnets for tasks, NAT for egress)
+> 
 > KMS for data and secrets
+> 
 > Secrets in AWS Secrets Manager (no hard-coded secrets)
+> 
 > Cloud Trail (multi-region), VPC Flow Logs, AWS Config, Guard Duty, Security Hub
+> 
 > Centralized logging (CloudWatch + S3 export) and retention rules
+> 
 > IAM least privilege (task/execution roles), SSM Session Manager for ops access
+> 
 > WAF + Shield Advanced (recommendation)
 
 3.	CI/CD (GitHub Actions): build → scan → push to ECR → update infra (terraform plan in PR; apply to dev automatically, manual approvals for prod/stg).
@@ -46,18 +54,27 @@ Multi-environment Terraform (dev/stg/prod) using a module-based layout and remot
 
 **Risks / next steps** 
 > Incomplete asset inventory — some resources may be untagged; central tagging enforcement needed.
+> 
 > Vulnerability scanning gaps — must ensure runtime scanning, regular container rebuilds, and dependency checks.
+> 
 >	DR limits — no cross-region active-active implementation by default.
+> 
 > Third-party dependencies — any external endpoints used by tasks must meet security reviews.
 
 __________________________________
 ******Minimal things **********
 > Enable Cloud Trail multi-region
+> 
 > KMS  for all at-rest encryption (including S3 server side, RDS, EBS, Dynamo DB table encryption if applicable).
+> 
 > Secrets Manager
+> 
 > Network segmentation — tasks should only be reachable via ALB.
+> 
 > Least-privilege IAM policies with role separation for CI and operators.
+> 
 > Centralized logs + export to immutable S3 bucket with versioning and lifecycle.
+> 
 > IaC and container scanning in CI (tfsec, trivy).
 
 <p align="center">
@@ -69,14 +86,23 @@ ________________________________________
 
 Below each step includes sample code snippets.
 1) Git repo + pre-commit
+   
 > Initialize git repo.
+> 
 > Add pre-commit with checks:
+> 
 > terraform fmt
+> 
 > tflint
+> 
 > terraform validate
+> 
 > tfsec (security scanning)
+> 
 > yamllint
-> .pre-commit-config.yaml 
+> 
+> .pre-commit-config.yaml
+> 
 repos:
 
 
@@ -90,9 +116,13 @@ repos:
     
 
 2) Terraform backend (remote state) and providers
+   
 > Create a centralized S3 bucket for Terraform state (encrypted with KMS) and a DynamoDB table for locks.
+> 
 >	Use per-environment state paths (envs/dev/terraform.tfstate).
+> 
 Example backend.tf used in each env:
+
 terraform {
   backend "s3" {
     bucket         = "txn-reconcile-tfstate-<org>-<account>"
@@ -104,19 +134,33 @@ terraform {
 }
 
 3) Networking (module modules/vpc)
+   
 > Multi-AZ VPC, public subnets for ALB, private subnets for tasks, NAT Gateways (or NAT Gateway per AZ).
+> 
 > VPC Flow Logs to a dedicated log group and optionally S3.
+> 
 Example variables:
+
 > cidr = "10.10.0.0/16"
+> 
 > az_count = 3
+> 
 Security groups:
+
 > ALB SG: allow HTTPS (443) from 0.0.0.0/0, health checks from ALB
+> 
 > ECS tasks SG: allow inbound from ALB SG only; egress restricted to necessary destinations (e.g., KMS, Secrets Manager, DB endpoints)
+> 
 Network ACLs and minimal exposure principle.
+
 4) KMS (module modules/kms)
+   
 > Create a CMK for encrypting S3 logs, DynamoDB, RDS, ECR images (artifact encryption), and Secrets Manager.
+> 
 > Enable key rotation.
+> 
 > Use CMK key policy and grant the Terraform execution role and pipeline OIDC role appropriate access.
+> 
 TF snippet:
 resource "aws_kms_key" "pci" {
   description             = "CMK for txn-reconcile (pci scope)"
