@@ -162,20 +162,30 @@ Network ACLs and minimal exposure principle.
 > Use CMK key policy and grant the Terraform execution role and pipeline OIDC role appropriate access.
 > 
 TF snippet:
+
+
 resource "aws_kms_key" "pci" {
   description             = "CMK for txn-reconcile (pci scope)"
   deletion_window_in_days = 30
   enable_key_rotation     = true
 }
 
+
+
 5) Secrets (AWS Secrets Manager)
+   
 > Store DB credentials and other secrets.
+> 
 >	Configure automatic rotation where possible.
+> 
 >	Use IAM policies to restrict which ECS task role can read which secret.
 
 
 7) ECR (module modules/ecr)
+   
 >	ECR repo with lifecycle policy and image scanning on push enabled.
+>
+>
 resource "aws_ecr_repository" "app" {
   name                 = "txn-reconcile-api"
   image_scanning_configuration { scan_on_push = true }
@@ -184,17 +194,30 @@ resource "aws_ecr_repository" "app" {
 
 
 8) ECS Fargate (module modules/ecs-fargate)
+   
 ECS cluster
+
 Task definition with:
+
 >	container image from ECR
+>
 >	CPU/memory parameters
+>
 >	log configuration to CloudWatch
+>
 >	environment variables from Secrets Manager (not plaintext)
+>
 >	task execution role & task role (least privilege)
+>
 >	use platform version 1.4+ to leverage latest features
+>
 >	Fargate service attached to ALB target group
+>
 >	Auto scaling via AWS Application Auto Scaling
+>
 Example 
+
+
 resource "aws_ecs_task_definition" "app" {
   family                   = "txn-reconcile"
   network_mode             = "awsvpc"
@@ -228,19 +251,32 @@ resource "aws_ecs_task_definition" "app" {
 
 
 8) ALB + ACM (module modules/alb)
+   
 >	Create an ALB with a listener on 443 (use aws_lb_listener).
+>
 >	Use ACM certificate for your domain — DNS validation via Route53.
+>
    WAF:
    Attach WAF rules to ALB to filter common web attacks 
+   
 9) Logging & Monitoring (module modules/logging and modules/config)
+    
 >	CloudWatch log groups for application, ALB access logs (S3 + CloudWatch).
+>
 >	S3 bucket for long-term retention of logs (write once, encrypted with CMK, lifecycle rules).
+>
 >	CloudTrail enabled multi-region with CloudWatch integration (alerts on suspicious activity).
+>
 >	GuardDuty and Security Hub enabled.
+>
 >	AWS Config aggregator + rules:
+>
 10) CI/CD pipeline (GitHub Actions example)
+    
 Two pipelines:
+
 >	ci-build.yml for building container images and running unit tests + scan
+>
 >	tf-deploy.yml for Terraform plan/apply
 ci-build.yml 
 name: CI Build
@@ -275,14 +311,25 @@ tf-deploy.yml
    If env==stg/prod => require manual approval (use workflow_dispatch or GitOps flow)
 
 11) Pre-deploy security scans
+    
 >	tfsec and checkov for IaC security.
+>
 >	Container scanning (Trivy) in CI.
+>
 >	Static analysis and unit tests for application code.
-12) Terratest / pytest example 
+>
+12) Terratest / pytest example
+    
 Create a small Terratest in Go (or pytest with localstack for local tests) to:
+
 terraform init && terraform apply
+
 Validate that ALB created, ECS cluster exists, ECR repo exists
+
 Terratest sample (Go skeleton) — run from tests/ folder.
-13) Blue/Green deployment 
+
+14) Blue/Green deployment
+    
 >	Use ECS + CodeDeploy with Application Load Balancer — Terraform supports aws_codedeploy_app + aws_codedeploy_deployment_group.
+>
 >	Alternatively, use ECS service with deployment controller = CODE_DEPLOY for blue/green or orchestrate traffic shifting in ALB via two target groups.
