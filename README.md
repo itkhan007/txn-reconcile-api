@@ -55,15 +55,6 @@ Multi-environment Terraform (dev/stg/prod) using a module-based layout and remot
 3.	CI/CD (GitHub Actions): build → scan → push to ECR → update infra (terraform plan in PR; apply to dev automatically, manual approvals for prod/stg).
 
 
-**Risks / next steps** 
-> Incomplete asset inventory — some resources may be untagged; central tagging enforcement needed.
-> 
-> Vulnerability scanning gaps — must ensure runtime scanning, regular container rebuilds, and dependency checks.
-> 
->	DR limits — no cross-region active-active implementation by default.
-> 
-> Third-party dependencies — any external endpoints used by tasks must meet security reviews.
-
 __________________________________
 **Minimal things**
 
