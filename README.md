@@ -1,8 +1,11 @@
 **ARCHITECTURE: txn-reconcile-api**
 
 **Purpose**
-Replace legacy monolithic portion with a microservice (txn-reconcile-api) run in ECS Fargate, internet-facing HTTPS endpoint, PCI Level-1 controls applied.
-Assumptions:	
+
+The goal of this project was to move from a legacy monolith application to a secure, scalable microservice called txn-reconcile-api. Since it handles financial transactions, the design needed to be PCI DSS Level 1 compliant, internet-facing, and cloud-ready. The objective was to use AWS ECS Fargate for serverless compute, which included high security and CI/CD automation.
+
+**Assumptions**
+
 > AWS account is accessible and Route53 hosted zone exists for domain.
 > Environments: dev, stage, prod (separate terraform workspaces or separate accounts).
 > Service stateful needs: metadata stored in Dynamo DB (default) or RDS if transactions    require SQL.
