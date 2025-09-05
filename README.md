@@ -15,11 +15,17 @@ Assumptions:
 
 **High-level components**
 > Network: VPC (3 AZs), public subnets (ALB), private subnets (Fargate), NAT gateway(s), VPC Flow Logs.
+> 
 > Compute: ECS Fargate service (task definitions), auto-scaling.
+> 
 > Ingress: Internet ALB (HTTPS), ACM certificate, WAF.
+> 
 > Storage: Dynamo DB (or RDS), S3 (logs and artifacts).
+> 
 > Security: KMS CMK, Secrets Manager, IAM least privilege, Cloud Trail, Guard Duty, AWS config.
+> 
 > CI/CD: GitHub Actions (build, scan, push, terraform plan/apply).
+> 
 > Monitoring: CloudWatch metrics/alarms, SNS for alerts.
 
 **Top-level approach **
